@@ -1,0 +1,96 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class PetHelpApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("PetHelp")
+        self.master.geometry("600x400")
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.label_welcome = tk.Label(self.master, text="Welcome to PetHelp!", font=("Helvetica", 16))
+        self.label_welcome.pack(pady=10)
+
+        self.btn_login = tk.Button(self.master, text="Log In", command=self.login)
+        self.btn_login.pack()
+
+        self.btn_signup = tk.Button(self.master, text="Sign Up", command=self.signup)
+        self.btn_signup.pack()
+
+        self.btn_exit = tk.Button(self.master, text="Exit", command=self.exit)
+        self.btn_exit.pack()
+
+    def login(self):
+        messagebox.showinfo("Login", "Login functionality will be implemented later.")
+
+    def signup(self):
+        messagebox.showinfo("Sign Up", "Sign Up functionality will be implemented later.")
+
+    def exit(self):
+        self.master.quit()
+
+
+class Board:
+    def __init__(self, master, title, content):
+        self.master = master
+        self.title = title
+        self.content = content
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.label_title = tk.Label(self.master, text=self.title, font=("Helvetica", 14))
+        self.label_title.pack(pady=10)
+
+        for item in self.content:
+            btn_item = tk.Button(self.master, text=item, command=lambda item=item: self.show_item(item))
+            btn_item.pack()
+
+        self.btn_back = tk.Button(self.master, text="Back", command=self.back)
+        self.btn_back.pack()
+
+    def show_item(self, item):
+        messagebox.showinfo(self.title, f"You clicked on: {item}")
+
+    def back(self):
+        self.master.destroy()
+
+
+def main():
+    root = tk.Tk()
+    app = PetHelpApp(root)
+
+    boards = {
+        "Lost Pets": ["Lost Dog", "Lost Cat", "Lost Bird"],
+        "Pet Tips & Tricks": ["Grooming Tips", "Training Tricks", "Healthcare Advice"],
+        "Pet-Friendly Places": ["Dog Parks", "Pet-Friendly Cafes", "Beach Resorts"]
+    }
+
+    def open_board(board_title):
+        board_window = tk.Toplevel(root)
+        board_window.title(board_title)
+        board = Board(board_window, board_title, boards[board_title])
+
+    def open_homepage():
+        app = PetHelpApp(root)
+
+    def exit_app():
+        root.quit()
+
+    navigation_menu = tk.Menu(root)
+    root.config(menu=navigation_menu)
+
+    boards_menu = tk.Menu(navigation_menu, tearoff=False)
+    navigation_menu.add_cascade(label="Boards", menu=boards_menu)
+    for board_title in boards:
+        boards_menu.add_command(label=board_title, command=lambda board_title=board_title: open_board(board_title))
+
+    navigation_menu.add_command(label="Home", command=open_homepage)
+    navigation_menu.add_command(label="Exit", command=exit_app)
+
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
